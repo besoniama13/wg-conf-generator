@@ -2,7 +2,11 @@
 
 # This script takes two arguments, first is the name of the client/configuration and an IP address.
 
-PWD=$(pwd)
+WD=$(pwd)
+PWD="$WD"/confs
+
+[ ! -d "$PWD" ] && mkdir "$PWD"
+
 NAME="$1"
 ADDRESS="$2"
 CONF_TABLE="$PWD"/conf.csv
