@@ -66,6 +66,7 @@ echo "---------- END CLIENT CONFIGURATION -----------"
 
 SERVER_CONF="$BASE".server.conf
 printf "\n\n"
+printf "\n\n"
 echo "---------- BEGIN SERVER CONFIGURATION -----------"
 printf "\n%s" "$SERVER_CONF"
 printf "\n\n"
