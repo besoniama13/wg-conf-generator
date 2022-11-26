@@ -23,7 +23,7 @@ ENDPOINT=$(grep Endpoint "$ENV_FILE" | cut -d'=' -f 2)
 DNS=$(grep DNS "$ENV_FILE" | cut -d'=' -f 2)
 
 
-# Made the directory of the configuration if unexisting
+# Make the directory of the configuration if unexisting
 [ ! -d "$CONF_ROOT_DIR"/"$NAME" ] && mkdir "$CONF_ROOT_DIR"/"$NAME"
 
 BASE="$CONF_ROOT_DIR"/"$NAME"/"$NAME"
