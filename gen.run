@@ -1,10 +1,11 @@
 #!/bin/sh
 
+# This script will overwrite the current conf.csv table
 
-PWD=$(pwd)
-USERS="$PWD"/gen.users.csv
-BAD="$PWD/"gen.bad
-GOOD="$PWD/"gen.good
+ROOT_DIR=$(pwd)
+USERS="$ROOT_DIR"/gen.users.csv
+BAD="$ROOT_DIR/"gen.bad
+GOOD="$ROOT_DIR/"gen.good
 touch "$BAD"
 
 grep -v '^ *#' < "$USERS" | while IFS= read -r line
@@ -15,6 +16,8 @@ do
 	printf "./gen.sh \"%s\" \"%s\"\n" "$NAME" "$ADDRESS" >> "$BAD"
 
 done
+
+[ -f "$ROOT_DIR"/confs/conf.csv ] && rm "$ROOT_DIR"/confs/conf.csv
 
 tr -d '\r' < "$BAD" > "$GOOD"
 sh "$GOOD" && rm "$BAD" && rm "$GOOD"
