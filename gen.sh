@@ -18,9 +18,9 @@ printf "%s," "$ADDRESS" | tee -a "$CONF_TABLE"
 
 ENV_FILE="$WD"/gen.env
 
-SERVER_PUB=$(grep PublicKey "$ENV_FILE" | cut -d' ' -f 3)
-ENDPOINT=$(grep Endpoint "$ENV_FILE" | cut -d' ' -f 3)
-DNS=$(grep DNS "$ENV_FILE" | cut -d' ' -f 3)
+SERVER_PUB=$(grep PublicKey "$ENV_FILE" | cut -d'=' -f 2)
+ENDPOINT=$(grep Endpoint "$ENV_FILE" | cut -d'=' -f 2)
+DNS=$(grep DNS "$ENV_FILE" | cut -d'=' -f 2)
 
 
 # Made the directory of the configuration if unexisting
