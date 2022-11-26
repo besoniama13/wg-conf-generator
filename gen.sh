@@ -11,8 +11,8 @@ NAME="$1"
 ADDRESS="$2"
 CONF_TABLE="$CONF_ROOT_DIR"/conf.csv
 
-printf "%s," "$NAME" | tee -a "$CONF_TABLE"
-printf "%s," "$ADDRESS" | tee -a "$CONF_TABLE"
+[ ! -f "$CONF_TABLE" ] && printf "NAME,ADDRESS,PRIVATE KEY,PUBLIC KEY, PRESHARED KEY\n" > "$CONF_TABLE"
+
 
 # Environment Variables
 
@@ -43,9 +43,13 @@ CLIENT_KEY_VAL="$( cat "$BASE".key )"
 CLIENT_PUB_VAL="$( cat "$BASE".pub )"
 CLIENT_PSK_VAL="$( cat "$BASE".psk )"
 
-printf "%s," "$CLIENT_KEY_VAL" | tee -a "$CONF_TABLE"
-printf "%s," "$CLIENT_PUB_VAL" | tee -a "$CONF_TABLE"
-printf "%s\n" "$CLIENT_PSK_VAL" | tee -a "$CONF_TABLE"
+{
+printf "%s," "$NAME"
+printf "%s," "$ADDRESS"
+printf "%s," "$CLIENT_KEY_VAL"
+printf "%s," "$CLIENT_PUB_VAL"
+printf "%s\n" "$CLIENT_PSK_VAL"
+} >> "$CONF_TABLE"
 
 printf "\n%s" "$CLIENT_CONF"
 echo "---------- BEGIN CLIENT CONFIGURATION -----------"
@@ -67,7 +71,7 @@ printf "\n\n"
 SERVER_CONF="$BASE".server.conf
 printf "\n\n"
 printf "\n\n"
-printf "\n%s" "$SERVER_CONF"
+printf "\n%s\n" "$SERVER_CONF"
 echo "---------- BEGIN SERVER CONFIGURATION -----------"
 printf "\n\n"
 
