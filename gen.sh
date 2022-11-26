@@ -16,7 +16,7 @@ printf "%s," "$ADDRESS" | tee -a "$CONF_TABLE"
 
 # Environment Variables
 
-ENV_FILE="$PWD"/gen.env
+ENV_FILE="$WD"/gen.env
 
 SERVER_PUB=$(grep PublicKey "$ENV_FILE" | cut -d' ' -f 3)
 ENDPOINT=$(grep Endpoint "$ENV_FILE" | cut -d' ' -f 3)
