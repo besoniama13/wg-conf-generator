@@ -1,0 +1,20 @@
+#!/bin/sh
+
+
+PWD=$(pwd)
+USERS="$PWD"/users.csv
+BAD="$PWD/"gen.bad
+GOOD="$PWD/"gen.good
+touch "$BAD"
+
+grep -v '^ *#' < "$USERS" | while IFS= read -r line
+do
+	NAME=$(echo "$line" | cut -d',' -f1)
+	ADDRESS=$( echo "$line" | cut -d',' -f2)
+
+	printf "./genscript \"%s\" \"%s\"\n" "$NAME" "$ADDRESS" >> "$BAD"
+
+done
+
+tr -d '\r' < "$BAD" > "$GOOD"
+sh "$GOOD" && rm "$BAD" && rm "$GOOD"
