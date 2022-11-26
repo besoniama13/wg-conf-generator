@@ -2,7 +2,7 @@
 
 
 PWD=$(pwd)
-USERS="$PWD"/users.csv
+USERS="$PWD"/gen.users.csv
 BAD="$PWD/"gen.bad
 GOOD="$PWD/"gen.good
 touch "$BAD"
@@ -12,7 +12,7 @@ do
 	NAME=$(echo "$line" | cut -d',' -f1)
 	ADDRESS=$( echo "$line" | cut -d',' -f2)
 
-	printf "./genscript \"%s\" \"%s\"\n" "$NAME" "$ADDRESS" >> "$BAD"
+	printf "./gen.sh \"%s\" \"%s\"\n" "$NAME" "$ADDRESS" >> "$BAD"
 
 done
 
