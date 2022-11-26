@@ -58,7 +58,7 @@ printf "Endpoint = %s\n" "$ENDPOINT" | tee -a "$CLIENT_CONF"
 printf "AllowedIPs = 0.0.0.0/0, ::/0" | tee -a "$CLIENT_CONF"
 printf "\n\n"
 echo "---------- END CLIENT CONFIGURATION -----------"
-
+printf "\n\n"
 
 SERVER_CONF="$BASE".server.conf
 printf "\n\n"
