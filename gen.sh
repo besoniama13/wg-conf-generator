@@ -2,21 +2,21 @@
 
 # This script takes two arguments, first is the name of the client/configuration and an IP address.
 
-WD=$(pwd)
-PWD="$WD"/confs
+ROOT_DIR=$(pwd)
+CONF_ROOT_DIR="$ROOT_DIR"/confs
 
-[ ! -d "$PWD" ] && mkdir "$PWD"
+[ ! -d "$CONF_ROOT_DIR" ] && mkdir "$CONF_ROOT_DIR"
 
 NAME="$1"
 ADDRESS="$2"
-CONF_TABLE="$PWD"/conf.csv
+CONF_TABLE="$CONF_ROOT_DIR"/conf.csv
 
 printf "%s," "$NAME" | tee -a "$CONF_TABLE"
 printf "%s," "$ADDRESS" | tee -a "$CONF_TABLE"
 
 # Environment Variables
 
-ENV_FILE="$WD"/gen.env
+ENV_FILE="$ROOT_DIR"/gen.env
 
 SERVER_PUB=$(grep PublicKey "$ENV_FILE" | cut -d'=' -f 2)
 ENDPOINT=$(grep Endpoint "$ENV_FILE" | cut -d'=' -f 2)
@@ -24,9 +24,9 @@ DNS=$(grep DNS "$ENV_FILE" | cut -d'=' -f 2)
 
 
 # Made the directory of the configuration if unexisting
-[ ! -d "$PWD"/"$NAME" ] && mkdir "$PWD"/"$NAME"
+[ ! -d "$CONF_ROOT_DIR"/"$NAME" ] && mkdir "$CONF_ROOT_DIR"/"$NAME"
 
-BASE="$PWD"/"$NAME"/"$NAME"
+BASE="$CONF_ROOT_DIR"/"$NAME"/"$NAME"
 
 CLIENT_KEY="$BASE".key
 CLIENT_PUB="$BASE".pub
@@ -47,8 +47,8 @@ printf "%s," "$CLIENT_KEY_VAL" | tee -a "$CONF_TABLE"
 printf "%s," "$CLIENT_PUB_VAL" | tee -a "$CONF_TABLE"
 printf "%s\n" "$CLIENT_PSK_VAL" | tee -a "$CONF_TABLE"
 
-echo "---------- BEGIN CLIENT CONFIGURATION -----------"
 printf "\n%s" "$CLIENT_CONF"
+echo "---------- BEGIN CLIENT CONFIGURATION -----------"
 printf "\n\n"
 printf "[Interface]\n" | tee "$CLIENT_CONF"
 printf "Address = %s/32\n" "$ADDRESS" | tee -a "$CLIENT_CONF"
@@ -67,8 +67,8 @@ printf "\n\n"
 SERVER_CONF="$BASE".server.conf
 printf "\n\n"
 printf "\n\n"
-echo "---------- BEGIN SERVER CONFIGURATION -----------"
 printf "\n%s" "$SERVER_CONF"
+echo "---------- BEGIN SERVER CONFIGURATION -----------"
 printf "\n\n"
 
 printf "# %s\n" "$NAME" | tee "$SERVER_CONF"
