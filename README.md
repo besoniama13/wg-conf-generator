@@ -32,3 +32,7 @@ name,ip_address
 #### [`gen.run`](gen.run)
 
 Make sure that you configured the `gen.users.csv` before running this script.
+
+```sh
+./gen
+```
