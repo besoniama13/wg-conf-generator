@@ -10,4 +10,4 @@
 .history/
 *.app
 .snapshots/*
-
+confs/
