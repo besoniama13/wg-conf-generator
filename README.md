@@ -1,4 +1,4 @@
-# wg-conf-generator
+# wg-conf-generator (Wireguard Configurations Generator)
 
 A script that generates [Wireguard](https://www.wireguard.com/) configuration files.
 
