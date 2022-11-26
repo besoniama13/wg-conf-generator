@@ -28,3 +28,7 @@ The format of this file is pretty straight forward.
 ```
 name,ip_address
 ```
+
+#### [`gen.run`](gen.run)
+
+Make sure that you configured the `gen.users.csv` before running this script.
