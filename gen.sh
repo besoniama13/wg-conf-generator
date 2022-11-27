@@ -15,8 +15,9 @@ CONF_TABLE="$CONF_ROOT_DIR"/conf.csv
 
 
 # Environment Variables
-
 ENV_FILE="$ROOT_DIR"/gen.env
+
+[ ! -f "$ENV_FILE" ] && printf "Server configuration does not exits.\nGenerating one...\n" && ./gen.server
 
 SERVER_PUB=$(grep PublicKey "$ENV_FILE" | cut -d'=' -f 2)
 ENDPOINT=$(grep Endpoint "$ENV_FILE" | cut -d'=' -f 2)
@@ -54,31 +55,39 @@ printf "%s\n" "$CLIENT_PSK_VAL"
 printf "\n%s\n" "$CLIENT_CONF"
 echo "---------- BEGIN CLIENT CONFIGURATION -----------"
 printf "\n\n"
-printf "[Interface]\n" | tee "$CLIENT_CONF"
-printf "Address = %s/32\n" "$ADDRESS" | tee -a "$CLIENT_CONF"
-printf "PrivateKey = %s\n" "$CLIENT_KEY_VAL" | tee -a "$CLIENT_CONF"
-printf "DNS = %s\n\n" "$DNS" | tee -a "$CLIENT_CONF"
 
-printf "[Peer]\n" | tee -a "$CLIENT_CONF"
-printf "PublicKey = %s\n" "$SERVER_PUB" | tee -a "$CLIENT_CONF"
-printf "PresharedKey = %s\n" "$CLIENT_PSK_VAL" | tee -a "$CLIENT_CONF"
-printf "Endpoint = %s\n" "$ENDPOINT" | tee -a "$CLIENT_CONF"
-printf "AllowedIPs = 0.0.0.0/0, ::/0" | tee -a "$CLIENT_CONF"
+{
+	printf "[Interface]\n"
+	printf "Address = %s/32\n" "$ADDRESS"
+	printf "PrivateKey = %s\n" "$CLIENT_KEY_VAL"
+	printf "DNS = %s\n\n" "$DNS"
+
+	printf "[Peer]\n"
+	printf "PublicKey = %s\n" "$SERVER_PUB"
+	printf "PresharedKey = %s\n" "$CLIENT_PSK_VAL"
+	printf "Endpoint = %s\n" "$ENDPOINT"
+	printf "AllowedIPs = 0.0.0.0/0, ::/0"
+
+} | tee -a "$CLIENT_CONF"
+
+
 printf "\n\n"
 echo "---------- END CLIENT CONFIGURATION -----------"
 printf "\n\n"
 
-SERVER_CONF="$BASE".server.conf
+SERVER_CONF="$ROOT_DIR"/gen.server.conf
 printf "\n\n"
 printf "\n\n"
 printf "\n%s\n" "$SERVER_CONF"
 echo "---------- BEGIN SERVER CONFIGURATION -----------"
 printf "\n\n"
 
-printf "# %s\n" "$NAME" | tee "$SERVER_CONF"
-printf "[Peer]\n" | tee -a "$SERVER_CONF"
-printf "PublicKey = %s\n" "$CLIENT_PUB_VAL" | tee -a "$SERVER_CONF"
-printf "PresharedKey = %s\n" "$CLIENT_PSK_VAL" | tee -a "$SERVER_CONF"
-printf "AllowedIPs = %s/32\n" "$ADDRESS" | tee -a "$SERVER_CONF"
+{
+	printf "\n\n# %s\n" "$NAME"
+	printf "[Peer]\n"
+	printf "PublicKey = %s\n" "$CLIENT_PUB_VAL"
+	printf "PresharedKey = %s\n" "$CLIENT_PSK_VAL"
+	printf "AllowedIPs = %s/32\n" "$ADDRESS"
+} | tee -a "$SERVER_CONF"
 
 echo "---------- END SERVER CONFIGURATION -----------"

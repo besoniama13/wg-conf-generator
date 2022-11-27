@@ -1,0 +1,54 @@
+#!/bin/sh
+
+ROOT_DIR=$(pwd)
+ENV_FILE="$ROOT_DIR"/gen.env
+SERVER_CONF="$ROOT_DIR"/gen.server.conf
+
+[ -f "$ENV_FILE" ] && printf "Warning: This script will overwrite your current gen.env file.\n\n"
+
+echo "Enter the DNS : "; read -r DNS;
+echo "Enter the Endpoint of the Server: ";read -r ENDPOINT;
+echo "Enter Network Interface where the tunnel comes in (eth0): ";read -r INTERFACE;
+
+[ -z "$INTERFACE" ] && INTERFACE=eth0
+
+wg genkey | (umask 0077 && tee "$ROOT_DIR"/server.key ) | wg pubkey > "$ROOT_DIR"/server.pub
+
+SERVER_KEY=$( cat "$ROOT_DIR"/server.key)
+SERVER_PUB=$(cat "$ROOT_DIR"/server.pub)
+SERVER_PORT=$(echo "$ENDPOINT" | cut -d':' -f 2)
+
+
+printf "PublicKey = %s\n" "$SERVER_PUB" > "$ENV_FILE"
+printf "DNS = %s\n" "$DNS" >> "$ENV_FILE"
+printf "Endpoint = %s\n" "$ENDPOINT" >> "$ENV_FILE"
+
+
+echo "------- BEGIN SERVER CONFIGURATION ---------"
+
+printf "[Interface]\n" | tee "$SERVER_CONF"
+printf "Address = %s/24\n" "$DNS" | tee -a "$SERVER_CONF"
+printf "ListenPort = %s\n" "$SERVER_PORT" | tee -a "$SERVER_CONF"
+printf "PrivateKey = %s\n\n" "$SERVER_KEY" | tee -a "$SERVER_CONF"
+
+
+printf "PostUp = iptables -A FORWARD -i %s -j ACCEPT; iptables -A FORWARD -o %s -j ACCEPT; iptables -t nat -A POSTROUTING -o %s -j MASQUERADE\n" "%i" "%i"  "$INTERFACE" | tee -a "$SERVER_CONF"
+printf "PostDown = iptables -D FORWARD -i %s -j ACCEPT; iptables -D FORWARD -o %s -j ACCEPT; iptables -t nat -D POSTROUTING -o %s -j MASQUERADE\n" "%i" "%i"  "$INTERFACE" | tee -a "$SERVER_CONF"
+
+
+echo "------- END SERVER CONFIGURATION ---------"
+
+
+#confirm(){
+#	[ -f "$ENV_FILE" ] && echo "ENV File exists, Do you want to overwrite it?(y/N)";read -r CONFIRM;
+#}
+#
+#confirm
+#
+#if [ "$CONFIRM" = "y" ] || [ "$CONFIRM" = "Y" ];then
+#	gen_server
+#elif [ "$CONFIRM" = "N"  ] || [ "$CONFIRM" = "n"  ] || [ -z "$CONFIRM" ];then
+#	exit 1;
+#else
+#	confirm
+#fi
