@@ -19,9 +19,9 @@ ENV_FILE="$ROOT_DIR"/gen.env
 
 [ ! -f "$ENV_FILE" ] && printf "Server configuration does not exits.\nGenerating one...\n" && ./gen.server
 
-SERVER_PUB=$(grep PublicKey "$ENV_FILE" | cut -d'=' -f 2)
-ENDPOINT=$(grep Endpoint "$ENV_FILE" | cut -d'=' -f 2)
-DNS=$(grep DNS "$ENV_FILE" | cut -d'=' -f 2)
+SERVER_PUB=$(grep PublicKey "$ENV_FILE" | cut -d' ' -f 3)
+ENDPOINT=$(grep Endpoint "$ENV_FILE" | cut -d' ' -f 3)
+DNS=$(grep DNS "$ENV_FILE" | cut -d' ' -f 3)
 
 
 # Make the directory of the configuration if unexisting
